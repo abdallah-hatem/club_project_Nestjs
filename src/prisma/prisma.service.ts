@@ -6,7 +6,10 @@ export class PrismaService extends PrismaClient {
   constructor() {
     super({
       datasources: {
-        db: { url: process.env.DATABASE_URL },
+        // db: { url: process.env.DATABASE_URL },
+        db: {
+          url: process.env.POSTGRES_PRISMA_URL,
+        },
       },
     });
   }
