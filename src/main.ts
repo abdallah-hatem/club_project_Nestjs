@@ -8,12 +8,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   app.enableCors({
-    origin: 'https://admin-panel-next-js-delta.vercel.app',
-
-    // origin: [
-    //   'http://localhost:3000',
-    //   'https://admin-panel-next-js-delta.vercel.app',
-    // ],
+    origin: [
+      'http://localhost:3000',
+      'https://admin-panel-next-js-delta.vercel.app/',
+    ],
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
   });
 
