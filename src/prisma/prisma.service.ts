@@ -9,8 +9,8 @@ export class PrismaService extends PrismaClient {
         db: {
           url:
             process.env.NODE_ENV === 'developmemt'
-              ? process.env.POSTGRES_PRISMA_URL
-              : process.env.DATABASE_URL,
+              ? process.env.DATABASE_URL
+              : process.env.POSTGRES_PRISMA_URL,
         },
       },
     });
