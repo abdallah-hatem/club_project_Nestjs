@@ -12,6 +12,7 @@ async function bootstrap() {
       'http://localhost:3000',
       'https://admin-panel-next-js-delta.vercel.app',
     ],
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
   });
 
   await app.listen(8000);
