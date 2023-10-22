@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  dev-db:
+    image: postgres:13.5
+    restart: always
+    environment:
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_DB=nest_first_project
+      - DB_PORT=5432
+    ports:
+      - '5432:5432'
+
+  test-db:
+    image: postgres:13.5
+    restart: always
+    environment:
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_DB=nest_first_project_test
+      - DB_PORT=5432
+    ports:
+      - '5435:5432'
+    # command: -p 5435
+
+volumes:
+  postgres:
