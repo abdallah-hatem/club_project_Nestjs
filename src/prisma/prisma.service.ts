@@ -21,7 +21,6 @@ export class PrismaService extends PrismaClient {
       this.colors.deleteMany(),
       this.sizes.deleteMany(),
       this.sizeToColors.deleteMany(),
-      this.sizeToColors.deleteMany(),
     ]);
   }
 }
