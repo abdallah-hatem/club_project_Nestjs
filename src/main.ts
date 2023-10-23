@@ -13,6 +13,7 @@ async function bootstrap() {
       'https://admin-panel-next-js-delta.vercel.app',
     ],
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    preflightContinue: true,
   });
 
   await app.listen(8000);
