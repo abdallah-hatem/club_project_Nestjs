@@ -1,5 +1,7 @@
 import {
   ForbiddenException,
+  HttpException,
+  HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -62,7 +64,8 @@ export class AuthService {
       const validPass = await bcrypt.compare(password, userPass);
 
       if (!validPass) {
-        throw new ForbiddenException('Password is incorrect!').getResponse();
+        // throw new ForbiddenException('Password is incorrect!').getResponse();
+        throw new HttpException('Password is incorrect!', HttpStatus.FORBIDDEN);
       }
 
       const jwt = await this.signToken(user.user.id, user.user.email);
