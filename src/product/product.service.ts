@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-// import { PrismaService } from 'src/prisma/prisma.service';
 import { ProductDto } from './dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { SizeToColorService } from '../size-to-color/size-to-color.service';
