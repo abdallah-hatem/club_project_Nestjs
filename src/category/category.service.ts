@@ -19,6 +19,22 @@ export class CategoryService {
     }
   }
 
+  async deleteCategoryById(categoryId: string) {
+    try {
+      const id = Number(categoryId);
+      const deletedCategory = await this.prisma.category.delete({
+        where: { id },
+      });
+
+      if (!deletedCategory) throw new Error('Error!');
+
+      return { msg: 'Category deleted successfully' };
+    } catch (error) {
+      console.log({ error });
+      return { error };
+    }
+  }
+
   async addCategory(dto: CategoryDto) {
     try {
       const { name } = dto;
