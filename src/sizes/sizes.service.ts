@@ -26,6 +26,10 @@ export class SizesService {
     try {
       const { name } = dto;
 
+      const sizeFound = await this.isSizeInDB(name);
+
+      if (sizeFound) throw new HttpException('Size already in database', 409);
+
       const newSize = await this.prisma.sizes.create({
         data: {
           name,
@@ -84,6 +88,20 @@ export class SizesService {
         throw new HttpException(message, statusCode);
       }
       return error;
+    }
+  }
+
+  async isSizeInDB(name: string) {
+    try {
+      const size = await this.prisma.sizes.findMany({
+        where: {
+          name,
+        },
+      });
+
+      return size.length > 0;
+    } catch (error) {
+      return { error };
     }
   }
 }

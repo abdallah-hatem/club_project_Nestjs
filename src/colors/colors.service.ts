@@ -26,6 +26,10 @@ export class ColorsService {
     try {
       const { name, hex } = dto;
 
+      const colorFound = await this.isColorInDB(name);
+
+      if (colorFound) throw new HttpException('Color already in database', 409);
+
       const newColor = await this.prisma.colors.create({
         data: {
           name,
@@ -85,6 +89,20 @@ export class ColorsService {
         throw new HttpException(message, statusCode);
       }
       return error;
+    }
+  }
+
+  async isColorInDB(name: string) {
+    try {
+      const colors = await this.prisma.colors.findMany({
+        where: {
+          name,
+        },
+      });
+
+      return colors.length > 0;
+    } catch (error) {
+      return { error };
     }
   }
 }

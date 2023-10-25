@@ -26,9 +26,9 @@ export class CategoryService {
     try {
       const { name } = dto;
 
-      const validCat = await this.isCategoryInDB(name);
+      const categoryFound = await this.isCategoryInDB(name);
 
-      if (validCat)
+      if (categoryFound)
         throw new HttpException('Category already in database', 409);
 
       const newCategory = await this.prisma.category.create({
