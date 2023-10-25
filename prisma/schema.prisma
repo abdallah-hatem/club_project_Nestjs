@@ -42,23 +42,23 @@ model CartItem {
   id       Int @id @default(autoincrement())
   quantity Int
 
-  size    Sizes @relation(name: "CartItemToSizes", fields: [sizesId], references: [id])
+  size    Sizes @relation(name: "CartItemToSizes", fields: [sizesId], references: [id], onDelete: Cascade)
   sizesId Int
 
-  color    Colors @relation(name: "CartItemToColors", fields: [colorsId], references: [id])
+  color    Colors @relation(name: "CartItemToColors", fields: [colorsId], references: [id], onDelete: Cascade)
   colorsId Int
 
-  product   Product @relation(name: "CartItemToProduct", fields: [productId], references: [id])
+  product   Product @relation(name: "CartItemToProduct", fields: [productId], references: [id], onDelete: Cascade)
   productId Int
 
-  Cart   Cart @relation(name: "CartToCartItem", fields: [cartId], references: [id])
+  Cart   Cart @relation(name: "CartToCartItem", fields: [cartId], references: [id], onDelete: Cascade)
   cartId Int
 }
 
 model Cart {
   id Int @id @default(autoincrement())
 
-  User   User @relation(name: "CartToUser", fields: [userId], references: [id])
+  User   User @relation(name: "CartToUser", fields: [userId], references: [id], onDelete: Cascade)
   userId Int
 
   cartItem CartItem[] @relation(name: "CartToCartItem")

@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, IsNumber } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class userId {
   @IsNumber()
@@ -6,7 +12,13 @@ export class userId {
   id: number;
 }
 
-export class userEmail {
+export class userUpdateDto {
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsOptional()
   @IsEmail()
   @IsNotEmpty()
   email: string;

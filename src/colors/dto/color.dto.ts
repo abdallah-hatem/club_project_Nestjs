@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class ColorDto {
   @IsString()
@@ -7,5 +7,15 @@ export class ColorDto {
 
   @IsString()
   @IsNotEmpty()
+  hex: string;
+}
+
+export class ColorUpdateDto {
+  @IsString()
+  @IsOptional()
+  name: string;
+
+  @IsString()
+  @IsOptional()
   hex: string;
 }

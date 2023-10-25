@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ProductDto } from './dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { SizeToColorService } from '../size-to-color/size-to-color.service';
@@ -144,6 +149,31 @@ export class ProductService {
       }
 
       return { msg: 'Product deleted successfully' };
+    } catch (error) {
+      console.log(error);
+      return { error };
+    }
+  }
+
+  async getPaginatedProducts(pageNumber: string) {
+    try {
+      const page = Number(pageNumber);
+      const items = 2;
+
+      function skips(page: number) {
+        if (page === 1) return 0;
+
+        return page * items;
+      }
+
+      const products = await this.prisma.product.findMany({
+        skip: skips(page),
+        take: items,
+      });
+
+      if (!products) throw new NotFoundException().getResponse();
+
+      return { products };
     } catch (error) {
       console.log(error);
       return { error };

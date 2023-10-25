@@ -45,4 +45,9 @@ export class ProductController {
   deleteProduct(@Param('id') id: string) {
     return this.productService.deleteProduct(id);
   }
+
+  @Get('/:id')
+  getPaginatedProducts(@Param('id') pageNumber: string) {
+    return this.productService.getPaginatedProducts(pageNumber);
+  }
 }

@@ -56,4 +56,23 @@ export class SizesService {
       return { error };
     }
   }
+
+  async updateSizeById(dto: SizeDto, sizeId: string) {
+    try {
+      const { name } = dto;
+      const id = Number(sizeId);
+
+      const updatedSize = await this.prisma.sizes.update({
+        where: { id },
+        data: { name },
+      });
+
+      if (!updatedSize) throw new Error('Error!');
+
+      return { msg: 'Size updated successfully', updatedSize };
+    } catch (error) {
+      console.log({ error });
+      return { error };
+    }
+  }
 }

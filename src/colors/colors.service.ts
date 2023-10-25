@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { ColorDto } from './dto';
+import { ColorDto, ColorUpdateDto } from './dto';
 
 @Injectable()
 export class ColorsService {
@@ -54,6 +54,25 @@ export class ColorsService {
       return { msg: 'successfully deleted' };
     } catch (error) {
       console.log(error);
+      return { error };
+    }
+  }
+
+  async updateColorById(dto: ColorUpdateDto, colorId: string) {
+    try {
+      const { name, hex } = dto;
+      const id = Number(colorId);
+
+      const updatedColor = await this.prisma.colors.update({
+        where: { id },
+        data: { name, hex },
+      });
+
+      if (!updatedColor) throw new Error('Error!');
+
+      return { msg: 'Color updated successfully', updatedColor };
+    } catch (error) {
+      console.log({ error });
       return { error };
     }
   }
