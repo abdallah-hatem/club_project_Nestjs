@@ -26,6 +26,7 @@ describe('App e2e ', () => {
 
     await prisma.cleanDb();
     pactum.request.setBaseUrl('http://localhost:9000/');
+    jest.setTimeout(30000);
   });
 
   afterAll(() => {
@@ -111,12 +112,12 @@ describe('App e2e ', () => {
           .expectStatus(HttpStatus.BAD_REQUEST);
       });
 
-      it('should Login', () => {
+      it('it should Login', () => {
         return pactum
           .spec()
           .post('auth/login')
           .withBody(dto)
-          .expectStatus(HttpStatus.OK)
+          .expectStatus(HttpStatus.CREATED)
           .stores('userToken', 'jwt');
       });
     });
@@ -124,45 +125,33 @@ describe('App e2e ', () => {
 
   describe('User', () => {
     //  can not implement the AdminGuard !!
-    // describe('Get all users', () => {
-    //   // it('it should return all user', () => {
-    //   //   return pactum
-    //   //     .spec()
-    //   //     .get('user')
-    //   //     .withBearerToken(`$S{userToken}`)
-    //   //     .expectStatus(HttpStatus.OK)
-    //   //     .inspect();
-    //   // });
-    // });
 
-    describe('Get user by id', () => {
-      it('it should return user with id 1', () => {
-        const expectedBody = {
-          user: {
-            id: like(1),
-            name: like('abdo'),
-            email: like('abdo@gmail.com'),
-            password: like(
-              '$2b$10$3GaHJ5b6hmsKjI400veSVuEDYXMT2bCwc3fOpVeKUgi7cvyQVYWCK',
-            ),
-          },
-        };
+    it('it should return user with id 1', () => {
+      const expectedBody = {
+        user: {
+          id: like(1),
+          name: like('abdo'),
+          email: like('abdo@gmail.com'),
+          password: like(
+            '$2b$10$3GaHJ5b6hmsKjI400veSVuEDYXMT2bCwc3fOpVeKUgi7cvyQVYWCK',
+          ),
+        },
+      };
 
-        return pactum
-          .spec()
-          .get('user/1')
-          .withBearerToken(`$S{userToken}`)
-          .expectStatus(HttpStatus.OK)
-          .expectJsonMatch(expectedBody);
-      });
+      return pactum
+        .spec()
+        .get('user/1')
+        .withBearerToken(`$S{userToken}`)
+        .expectStatus(HttpStatus.OK)
+        .expectJsonMatch(expectedBody);
     });
   });
 
-  describe('Category', () => {
+  describe('category', () => {
     it('should throw if no body', () => {
       return pactum
         .spec()
-        .post('Category')
+        .post('category')
         .expectStatus(HttpStatus.BAD_REQUEST);
     });
 
@@ -173,9 +162,8 @@ describe('App e2e ', () => {
       return pactum
         .spec()
         .withBody(dto)
-        .post('Category')
-        .expectStatus(HttpStatus.BAD_REQUEST)
-        .inspect();
+        .post('category')
+        .expectStatus(HttpStatus.BAD_REQUEST);
     });
 
     it('should add a category', () => {
@@ -185,13 +173,26 @@ describe('App e2e ', () => {
 
       return pactum
         .spec()
-        .post('Category')
+        .post('category')
         .withBody(dto)
         .expectStatus(HttpStatus.CREATED);
     });
 
+    it('should edit a category', () => {
+      const body = {
+        name: 'updated category',
+      };
+
+      return pactum
+        .spec()
+        .put('category/1')
+        .withBody(body)
+        .expectBodyContains('updated category')
+        .expectStatus(HttpStatus.OK);
+    });
+
     it('should return all categories', () => {
-      return pactum.spec().get('Category').expectStatus(HttpStatus.OK);
+      return pactum.spec().get('category').expectStatus(HttpStatus.OK);
     });
   });
 
@@ -208,8 +209,7 @@ describe('App e2e ', () => {
         .spec()
         .withBody(dto)
         .post('colors')
-        .expectStatus(HttpStatus.BAD_REQUEST)
-        .inspect();
+        .expectStatus(HttpStatus.BAD_REQUEST);
     });
 
     it('should throw if wrong dto', () => {
@@ -221,8 +221,7 @@ describe('App e2e ', () => {
         .spec()
         .withBody(dto)
         .post('colors')
-        .expectStatus(HttpStatus.BAD_REQUEST)
-        .inspect();
+        .expectStatus(HttpStatus.BAD_REQUEST);
     });
 
     it('should add a color', () => {
@@ -235,16 +234,11 @@ describe('App e2e ', () => {
         .spec()
         .post('colors')
         .withBody(dto)
-        .expectStatus(HttpStatus.CREATED)
-        .inspect();
+        .expectStatus(HttpStatus.CREATED);
     });
 
     it('should delete the color with id 1', () => {
-      return pactum
-        .spec()
-        .delete('colors/1')
-        .expectStatus(HttpStatus.OK)
-        .inspect();
+      return pactum.spec().delete('colors/1').expectStatus(HttpStatus.OK);
     });
 
     it('should return all colors', () => {

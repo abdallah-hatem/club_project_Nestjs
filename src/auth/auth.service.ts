@@ -52,9 +52,7 @@ export class AuthService {
       const user = await this.userService.getUserByEmail(email);
 
       if (!user.user) {
-        throw new NotFoundException(
-          'No user found please signup!',
-        ).getResponse();
+        throw new NotFoundException('No user found please signup!');
       }
 
       const userPass = user.user.password;
