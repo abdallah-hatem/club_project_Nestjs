@@ -26,6 +26,11 @@ export class CategoryService {
     try {
       const { name } = dto;
 
+      const validCat = await this.isCategoryInDB(name);
+
+      if (validCat)
+        throw new HttpException('Category already in database', 409);
+
       const newCategory = await this.prisma.category.create({
         data: {
           name,
@@ -37,8 +42,10 @@ export class CategoryService {
       return { msg: 'successfully created', newCategory };
     } catch (error) {
       if (error) {
-        const { message, statusCode } = error;
-        throw new HttpException(message, statusCode);
+        console.log(error);
+
+        const { message, status } = error;
+        throw new HttpException(message, status);
       }
       return error;
     }
@@ -83,5 +90,17 @@ export class CategoryService {
       }
       return error;
     }
+  }
+
+  async isCategoryInDB(name: string) {
+    try {
+      const category = await this.prisma.category.findMany({
+        where: {
+          name,
+        },
+      });
+
+      return category.length > 0;
+    } catch (error) {}
   }
 }
