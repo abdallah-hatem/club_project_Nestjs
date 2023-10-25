@@ -42,8 +42,8 @@ export class ColorsService {
       return { msg: 'successfully created', newColor };
     } catch (error) {
       if (error) {
-        const { message, statusCode } = error;
-        throw new HttpException(message, statusCode);
+        const { message, status } = error;
+        throw new HttpException(message, status);
       }
       return error;
     }

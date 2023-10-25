@@ -41,8 +41,8 @@ export class SizesService {
       return { msg: 'successfully created', newSize };
     } catch (error) {
       if (error) {
-        const { message, statusCode } = error;
-        throw new HttpException(message, statusCode);
+        const { message, status } = error;
+        throw new HttpException(message, status);
       }
       return error;
     }
