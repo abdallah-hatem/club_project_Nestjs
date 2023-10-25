@@ -20,13 +20,16 @@ export class SizeToColorService {
         include: { colors: true, size: true },
       });
       if (!sizeToColors) {
-        throw new BadRequestException('Error');
+        throw new BadRequestException().getResponse();
       }
 
       return { sizeToColors };
     } catch (error) {
-      console.log(error);
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 
@@ -54,12 +57,15 @@ export class SizeToColorService {
         },
       });
 
-      if (!newSizeToColors) throw new BadRequestException();
+      if (!newSizeToColors) throw new BadRequestException().getResponse();
 
       return { msg: 'Succefully created', newSizeToColors };
     } catch (error) {
-      console.log(error);
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 
@@ -78,14 +84,12 @@ export class SizeToColorService {
       }
 
       // check if all colors ar in database before creating
-
       const updatedSizeToColors = await this.prisma.sizeToColors.update({
         where: { id: sizeToColorId, sizeId, productId },
         data: {
           colors: { set: colors?.map((id: number) => ({ id })) },
           quantity,
         },
-        // include: { colors: true },
       });
 
       if (!updatedSizeToColors) {
@@ -94,8 +98,11 @@ export class SizeToColorService {
 
       return { msg: 'successfully updated', updatedSizeToColors };
     } catch (error) {
-      console.log(error);
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 
@@ -107,6 +114,6 @@ export class SizeToColorService {
       },
     });
 
-    return alreadyExists.length > 0;
+    return alreadyExists?.length > 0;
   }
 }

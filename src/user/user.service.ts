@@ -1,12 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { userUpdateDto } from './dto';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private prisma: PrismaService, // private jwt: JwtService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async getAllUsers() {
     try {
@@ -14,25 +12,37 @@ export class UserService {
         include: { cart: true },
       });
 
+      if (!users) throw new HttpException('Error in database', 500);
+
       return { users };
     } catch (error) {
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 
   async getUserById(userId: string) {
-    const id = Number(userId);
-
     try {
+      const id = Number(userId);
+
       const user = await this.prisma.user.findUnique({
         where: {
           id,
         },
       });
 
+      if (!user) throw new HttpException('Error in database', 500);
+
       return { user };
     } catch (error) {
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 
@@ -44,9 +54,15 @@ export class UserService {
         },
       });
 
+      if (!user) throw new HttpException('Error in database', 500);
+
       return { user };
     } catch (error) {
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 
@@ -59,12 +75,15 @@ export class UserService {
         },
       });
 
-      if (!deletedUser) throw new Error('error');
+      if (!deletedUser) throw new HttpException('Error in database', 500);
 
       return { msg: 'successfully deleted', deletedUser };
     } catch (error) {
-      console.log(error);
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 
@@ -78,12 +97,15 @@ export class UserService {
         data: { name, email },
       });
 
-      if (!updatedUser) throw new Error('Error!');
+      if (!updatedUser) throw new HttpException('Error in database', 500);
 
       return { msg: 'User updated successfully', updatedUser };
     } catch (error) {
-      console.log({ error });
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 }

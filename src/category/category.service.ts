@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CategoryDto } from './dto';
 
@@ -10,12 +10,15 @@ export class CategoryService {
     try {
       const categories = await this.prisma.category.findMany();
 
-      if (!categories) return { msg: 'Error!' };
+      if (!categories) throw new HttpException('Error in database', 500);
 
       return { categories };
     } catch (error) {
-      console.log({ error });
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 
@@ -29,13 +32,15 @@ export class CategoryService {
         },
       });
 
-      if (!newCategory) throw new Error('error');
+      if (!newCategory) throw new HttpException('Error in database', 500);
 
       return { msg: 'successfully created', newCategory };
     } catch (error) {
-      console.log(error);
-
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 
@@ -46,12 +51,15 @@ export class CategoryService {
         where: { id },
       });
 
-      if (!deletedCategory) throw new Error('Error!');
+      if (!deletedCategory) throw new HttpException('Error in database', 500);
 
       return { msg: 'Category deleted successfully' };
     } catch (error) {
-      console.log({ error });
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 
@@ -65,12 +73,15 @@ export class CategoryService {
         data: { name },
       });
 
-      if (!updatedCategory) throw new Error('Error!');
+      if (!updatedCategory) throw new HttpException('Error in database', 500);
 
       return { msg: 'Category updated successfully', updatedCategory };
     } catch (error) {
-      console.log({ error });
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 }

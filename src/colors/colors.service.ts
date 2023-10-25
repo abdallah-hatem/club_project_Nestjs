@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ColorDto, ColorUpdateDto } from './dto';
 
@@ -10,12 +10,15 @@ export class ColorsService {
     try {
       const colors = await this.prisma.colors.findMany();
 
-      if (!colors) return { msg: 'Error!' };
+      if (!colors) throw new HttpException('Error in database', 500);
 
       return { colors };
     } catch (error) {
-      console.log({ error });
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 
@@ -30,13 +33,15 @@ export class ColorsService {
         },
       });
 
-      if (!newColor) throw new Error('error');
+      if (!newColor) throw new HttpException('Error in database', 500);
 
       return { msg: 'successfully created', newColor };
     } catch (error) {
-      console.log(error);
-
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 
@@ -49,12 +54,15 @@ export class ColorsService {
         },
       });
 
-      if (!deletedColor) throw new Error('error');
+      if (!deletedColor) throw new HttpException('Error in database', 500);
 
       return { msg: 'successfully deleted' };
     } catch (error) {
-      console.log(error);
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 
@@ -68,12 +76,15 @@ export class ColorsService {
         data: { name, hex },
       });
 
-      if (!updatedColor) throw new Error('Error!');
+      if (!updatedColor) throw new HttpException('Error in database', 500);
 
       return { msg: 'Color updated successfully', updatedColor };
     } catch (error) {
-      console.log({ error });
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 }

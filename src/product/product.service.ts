@@ -16,16 +16,24 @@ export class ProductService {
   ) {}
 
   async getAllProducts() {
-    const products = await this.prisma.product.findMany({
-      include: {
-        Category: true,
-        SizeToColors: { include: { size: true, colors: true } },
-      },
-    });
+    try {
+      const products = await this.prisma.product.findMany({
+        include: {
+          Category: true,
+          SizeToColors: { include: { size: true, colors: true } },
+        },
+      });
 
-    if (!products) return { msg: 'No products found!' };
+      if (!products) throw new HttpException('Error in database', 500);
 
-    return { products };
+      return { products };
+    } catch (error) {
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
+    }
   }
 
   async getProductById(dto: string) {
@@ -48,24 +56,16 @@ export class ProductService {
 
       return { product };
     } catch (error) {
-      console.log(error);
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 
   async addProduct(dto: ProductDto) {
     const { name, price, desc, categoryId, sizeToColors } = dto;
-
-    // const testData = {
-    //   name: 'New shirt',
-    //   desc: 'desccc',
-    //   price: 20,
-    //   categoryId: 1,
-    //   sizeToColors: [
-    //     { sizeId: 2, colors: [2], quantity: 20 },
-    //     { sizeId: 1, colors: [1], quantity: 12 },
-    //   ],
-    // };
 
     try {
       const newProduct = await this.prisma.product.create({
@@ -76,6 +76,9 @@ export class ProductService {
           categoryId,
         },
       });
+
+      if (!newProduct) throw new HttpException('Error in database', 500);
+
       const productId = newProduct.id;
 
       sizeToColors.forEach((el) => {
@@ -89,16 +92,20 @@ export class ProductService {
 
       return { newProduct };
     } catch (error) {
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 
   async editProduct(dto: ProductDto, productId: string) {
-    const id = Number(productId);
-
-    const { name, price, desc, categoryId, sizeToColors } = dto;
-
     try {
+      const id = Number(productId);
+
+      const { name, price, desc, categoryId, sizeToColors } = dto;
+
       const updatedProduct = await this.prisma.product.update({
         where: { id },
         data: {
@@ -132,7 +139,11 @@ export class ProductService {
 
       return { updatedProduct };
     } catch (error) {
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 
@@ -150,8 +161,11 @@ export class ProductService {
 
       return { msg: 'Product deleted successfully' };
     } catch (error) {
-      console.log(error);
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 
@@ -175,8 +189,11 @@ export class ProductService {
 
       return { products };
     } catch (error) {
-      console.log(error);
-      return { error };
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
     }
   }
 }
