@@ -114,11 +114,9 @@ export class ProductService {
           desc,
           categoryId,
         },
-        include: { SizeToColors: { include: { colors: true, size: true } } },
       });
 
-      if (!updatedProduct)
-        throw new HttpException('Erro!', HttpStatus.BAD_REQUEST);
+      if (!updatedProduct) throw new HttpException('Error!', 400);
 
       if (sizeToColors) {
         const updatedSTC = sizeToColors.map((el) =>
@@ -133,15 +131,14 @@ export class ProductService {
           ),
         );
 
-        if (!updatedSTC)
-          throw new HttpException('Erro!', HttpStatus.BAD_REQUEST);
+        if (!updatedSTC) throw new HttpException('Error!', 400);
       }
 
       return { updatedProduct };
     } catch (error) {
       if (error) {
-        const { message, statusCode } = error;
-        throw new HttpException(message, statusCode);
+        const { message, status } = error;
+        throw new HttpException(message, status);
       }
       return error;
     }

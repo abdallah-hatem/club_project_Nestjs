@@ -1,8 +1,8 @@
 import {
   BadRequestException,
   HttpException,
-  HttpStatus,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
@@ -77,9 +77,8 @@ export class SizeToColorService {
       // check if eligible to update
       const alreadyExists = await this.findSizeToColor(productId, sizeId);
       if (!alreadyExists) {
-        throw new HttpException(
+        throw new NotFoundException(
           'Error! not found, make sure that product or size already created',
-          HttpStatus.NOT_FOUND,
         );
       }
 
