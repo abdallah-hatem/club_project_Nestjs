@@ -119,19 +119,31 @@ export class ProductService {
       if (!updatedProduct) throw new HttpException('Error!', 400);
 
       if (sizeToColors) {
-        const updatedSTC = sizeToColors.map((el) =>
-          this.sizeToColorsService.updateSizeToColors(
-            {
-              sizeId: el.sizeId,
-              colors: el.colors,
-              quantity: el.quantity,
-              productId: id,
-            },
-            String(el.sizeToColorsId),
-          ),
+        const productStcs =
+          await this.sizeToColorsService.getStcByProductId(id);
+
+        const productStcIds = productStcs.sizeToColors.map((el: any) => el.id);
+
+        const updatedSTC = await this.updatedProductStcs(
+          sizeToColors,
+          productStcIds,
+          id,
+        );
+        if (!updatedSTC) throw new HttpException('Error!', 400);
+
+        const canAdd = await this.isThereProductsToAdd(
+          sizeToColors,
+          productStcIds,
         );
 
-        if (!updatedSTC) throw new HttpException('Error!', 400);
+        if (canAdd) {
+          const addedSTC = await this.addProductStc(
+            sizeToColors,
+            productStcIds,
+            id,
+          );
+          if (!addedSTC) throw new HttpException('Error!', 400);
+        }
       }
 
       return { updatedProduct };
@@ -192,5 +204,53 @@ export class ProductService {
       }
       return error;
     }
+  }
+
+  ///////////////////////////////////////////////
+
+  async addProductStc(sizeToColors: any, productStcIds: any, id: number) {
+    const toAdd = sizeToColors.filter(
+      (el: any) => !productStcIds.includes(el.sizeId),
+    );
+
+    const addedSTC = toAdd.map((el) =>
+      this.sizeToColorsService.addSizeToColors({
+        sizeId: el.sizeId,
+        colors: el.colors,
+        quantity: el.quantity,
+        productId: id,
+      }),
+    );
+    console.log(await addedSTC, 'addedSTC');
+
+    return await addedSTC;
+  }
+
+  async updatedProductStcs(sizeToColors: any, productStcIds: any, id: number) {
+    const toEdit = sizeToColors.filter((el: any) =>
+      productStcIds.includes(el.sizeId),
+    );
+
+    const updatedSTC = toEdit.map((el: any) =>
+      this.sizeToColorsService.updateSizeToColors(
+        {
+          sizeId: el.sizeId,
+          colors: el.colors,
+          quantity: el.quantity,
+          productId: id,
+        },
+        String(el.sizeToColorsId),
+      ),
+    );
+
+    return await updatedSTC;
+  }
+
+  async isThereProductsToAdd(sizeToColors: any, productStcIds) {
+    const stcToAdd = sizeToColors.filter(
+      (el: any) => !productStcIds.includes(el.sizeId),
+    );
+
+    return stcToAdd.length > 0;
   }
 }

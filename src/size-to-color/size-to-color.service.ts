@@ -105,6 +105,26 @@ export class SizeToColorService {
     }
   }
 
+  async getStcByProductId(productId: number) {
+    try {
+      const sizeToColors = await this.prisma.sizeToColors.findMany({
+        where: { productId },
+        include: { colors: true, size: true },
+      });
+      if (!sizeToColors) {
+        throw new BadRequestException().getResponse();
+      }
+
+      return { sizeToColors };
+    } catch (error) {
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
+    }
+  }
+
   async findSizeToColor(productId: number, sizeId: number) {
     const alreadyExists = await this.prisma.sizeToColors.findMany({
       where: {
