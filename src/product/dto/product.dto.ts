@@ -7,7 +7,12 @@ import {
   IsOptional,
 } from 'class-validator';
 
-type STC = { sizeId: 2; colors: [2]; quantity: 20; sizeToColorsId: 1 };
+type STC = {
+  sizeId: number;
+  colors: [number];
+  quantity: number;
+  sizeToColorsId: number;
+};
 
 export class ProductDto {
   @IsString()

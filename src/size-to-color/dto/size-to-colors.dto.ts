@@ -31,7 +31,7 @@ export class SizeToColorsUpdateDto {
   productId: number;
 
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   sizeId: number;
 
   @IsOptional()

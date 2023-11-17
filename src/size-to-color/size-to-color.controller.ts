@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { SizeToColorService } from './size-to-color.service';
 import {
   SizeToColorsDto,
@@ -17,6 +25,11 @@ export class SizeToColorController {
   @Post()
   addSizeToColors(@Body() dto: SizeToColorsDto) {
     return this.sizeToColorsService.addSizeToColors(dto);
+  }
+
+  @Delete('/:id')
+  deleteSizeToColors(@Param('id') id: string) {
+    return this.sizeToColorsService.deleteSizeToColors(id);
   }
 
   @Put('/:id')

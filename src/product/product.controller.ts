@@ -36,8 +36,8 @@ export class ProductController {
 
   @UseGuards(JwtGuard)
   @Put('/:id')
-  editProduct(@Body() dto: ProductDto, @Param('id') id: string) {
-    return this.productService.editProduct(dto, id);
+  updateProduct(@Body() dto: ProductDto, @Param('id') id: string) {
+    return this.productService.updateProduct(dto, id);
   }
 
   @UseGuards(JwtGuard)

@@ -82,15 +82,16 @@ export class ProductService {
       const productId = newProduct.id;
 
       sizeToColors.forEach((el) => {
-        this.sizeToColorsService.addSizeToColors({
+        const addedSTC = this.sizeToColorsService.addSizeToColors({
           productId,
           sizeId: el.sizeId,
           quantity: el.quantity,
           colors: el.colors,
         });
+        if (!addedSTC) throw new HttpException('Error!', 400);
       });
 
-      return { newProduct };
+      return { msg: 'Product created successfully', newProduct };
     } catch (error) {
       if (error) {
         const { message, statusCode } = error;
@@ -100,11 +101,11 @@ export class ProductService {
     }
   }
 
-  async editProduct(dto: ProductDto, productId: string) {
+  async updateProduct(dto: ProductDto, productId: string) {
     try {
       const id = Number(productId);
 
-      const { name, price, desc, categoryId, sizeToColors } = dto;
+      const { name, price, desc, categoryId } = dto;
 
       const updatedProduct = await this.prisma.product.update({
         where: { id },
@@ -118,40 +119,13 @@ export class ProductService {
 
       if (!updatedProduct) throw new HttpException('Error!', 400);
 
-      if (sizeToColors) {
-        const productStcs =
-          await this.sizeToColorsService.getStcByProductId(id);
-
-        const productStcIds = productStcs.sizeToColors.map((el: any) => el.id);
-
-        const updatedSTC = await this.updatedProductStcs(
-          sizeToColors,
-          productStcIds,
-          id,
-        );
-        if (!updatedSTC) throw new HttpException('Error!', 400);
-
-        const canAdd = await this.isThereProductsToAdd(
-          sizeToColors,
-          productStcIds,
-        );
-
-        if (canAdd) {
-          const addedSTC = await this.addProductStc(
-            sizeToColors,
-            productStcIds,
-            id,
-          );
-          if (!addedSTC) throw new HttpException('Error!', 400);
-        }
-      }
-
-      return { updatedProduct };
+      return { msg: 'Successfully updated', updatedProduct };
     } catch (error) {
       if (error) {
         const { message, status } = error;
         throw new HttpException(message, status);
       }
+
       return error;
     }
   }
@@ -207,50 +181,4 @@ export class ProductService {
   }
 
   ///////////////////////////////////////////////
-
-  async addProductStc(sizeToColors: any, productStcIds: any, id: number) {
-    const toAdd = sizeToColors.filter(
-      (el: any) => !productStcIds.includes(el.sizeId),
-    );
-
-    const addedSTC = toAdd.map((el) =>
-      this.sizeToColorsService.addSizeToColors({
-        sizeId: el.sizeId,
-        colors: el.colors,
-        quantity: el.quantity,
-        productId: id,
-      }),
-    );
-    console.log(await addedSTC, 'addedSTC');
-
-    return await addedSTC;
-  }
-
-  async updatedProductStcs(sizeToColors: any, productStcIds: any, id: number) {
-    const toEdit = sizeToColors.filter((el: any) =>
-      productStcIds.includes(el.sizeId),
-    );
-
-    const updatedSTC = toEdit.map((el: any) =>
-      this.sizeToColorsService.updateSizeToColors(
-        {
-          sizeId: el.sizeId,
-          colors: el.colors,
-          quantity: el.quantity,
-          productId: id,
-        },
-        String(el.sizeToColorsId),
-      ),
-    );
-
-    return await updatedSTC;
-  }
-
-  async isThereProductsToAdd(sizeToColors: any, productStcIds) {
-    const stcToAdd = sizeToColors.filter(
-      (el: any) => !productStcIds.includes(el.sizeId),
-    );
-
-    return stcToAdd.length > 0;
-  }
 }

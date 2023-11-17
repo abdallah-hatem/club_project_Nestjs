@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  HttpException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import {
   SizeToColorsDto,
@@ -37,8 +32,9 @@ export class SizeToColorService {
     try {
       const { productId, sizeId, colors, quantity } = dto;
 
-      // check if a product with the same size already exists
-      const alreadyExists = await this.findSizeToColor(productId, sizeId);
+      // check if sizeToColor already exists
+
+      const alreadyExists = await this.canAdd(productId, sizeId, colors);
 
       if (alreadyExists) {
         throw new BadRequestException(
@@ -72,19 +68,26 @@ export class SizeToColorService {
   async updateSizeToColors(dto: SizeToColorsUpdateDto, id: string) {
     try {
       const sizeToColorId = Number(id);
-      const { productId, sizeId, colors, quantity } = dto;
+      const { colors, quantity, productId, sizeId } = dto;
 
       // check if eligible to update
-      const alreadyExists = await this.findSizeToColor(productId, sizeId);
-      if (!alreadyExists) {
-        throw new NotFoundException(
-          'Error! not found, make sure that product or size already created',
-        );
+      const alreadyExists = await this.canUpdate(
+        productId,
+        sizeId,
+        colors,
+        sizeToColorId,
+      );
+
+      if (alreadyExists) {
+        throw new BadRequestException(
+          'Error! size with the same colors already exists',
+        ).getResponse();
       }
 
-      // check if all colors ar in database before creating
+      // TODO check if all colors ar in database before creating
+
       const updatedSizeToColors = await this.prisma.sizeToColors.update({
-        where: { id: sizeToColorId, sizeId, productId },
+        where: { id: sizeToColorId },
         data: {
           colors: { set: colors?.map((id: number) => ({ id })) },
           quantity,
@@ -125,14 +128,90 @@ export class SizeToColorService {
     }
   }
 
-  async findSizeToColor(productId: number, sizeId: number) {
-    const alreadyExists = await this.prisma.sizeToColors.findMany({
-      where: {
-        productId,
-        sizeId,
-      },
-    });
+  async deleteSizeToColors(stcId: string) {
+    try {
+      const id = Number(stcId);
+      const deletedStc = await this.prisma.sizeToColors.delete({
+        where: { id },
+      });
 
-    return alreadyExists?.length > 0;
+      if (!deletedStc) throw new HttpException('Error! could not delete', 400);
+
+      return { msg: 'successfully deleted' };
+    } catch (error) {
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
+    }
+  }
+
+  /////////////////////////////////////////////
+  async findSizeToColor(id: number) {
+    console.log(id);
+
+    try {
+      const alreadyExists = await this.prisma.sizeToColors.findUnique({
+        where: { id },
+      });
+      if (!alreadyExists) throw new HttpException('Error!', 400);
+
+      return alreadyExists;
+    } catch (error) {
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
+    }
+  }
+
+  async canAdd(productId: number, sizeId: number, colors: number[]) {
+    try {
+      const alreadyExists = await this.prisma.sizeToColors.findMany({
+        where: { productId, sizeId, colors: { some: { id: { in: colors } } } },
+      });
+      if (!alreadyExists) throw new HttpException('Error!', 400);
+
+      console.log(alreadyExists);
+
+      return alreadyExists.length > 0;
+    } catch (error) {
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
+    }
+  }
+
+  async canUpdate(
+    productId: number,
+    sizeId: number,
+    colors: number[],
+    sizeToColorId: number,
+  ) {
+    try {
+      const alreadyExists = await this.prisma.sizeToColors.findMany({
+        where: {
+          NOT: { id: sizeToColorId },
+          productId,
+          sizeId,
+          colors: { every: { id: { in: colors } } },
+        },
+      });
+      if (!alreadyExists) throw new HttpException('Error!', 400);
+
+      console.log(alreadyExists);
+
+      return alreadyExists.length > 0;
+    } catch (error) {
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
+    }
   }
 }
