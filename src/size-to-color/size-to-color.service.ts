@@ -198,12 +198,10 @@ export class SizeToColorService {
           NOT: { id: sizeToColorId },
           productId,
           sizeId,
-          colors: { every: { id: { in: colors } } },
+          colors: { some: { id: { in: colors } } },
         },
       });
       if (!alreadyExists) throw new HttpException('Error!', 400);
-
-      console.log(alreadyExists);
 
       return alreadyExists.length > 0;
     } catch (error) {
