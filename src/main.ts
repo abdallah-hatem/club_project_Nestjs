@@ -12,6 +12,7 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://localhost:4200',
       'https://admin-panel-next-js-delta.vercel.app',
+      'https://angular-admin-panel-ecommerce-qtew2ghbm-ahkortam2-gmailcom.vercel.app'
     ],
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
   });
