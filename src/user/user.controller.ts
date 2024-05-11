@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtGuard } from '../auth/guard';
-import { AdminGuard } from '../auth/guard/admin.guard';
+// import { AdminGuard } from '../auth/guard/admin.guard';
 import { userUpdateDto } from './dto';
 
 @UseGuards(JwtGuard)
@@ -17,7 +17,7 @@ import { userUpdateDto } from './dto';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   @Get()
   getAllUsers() {
     return this.userService.getAllUsers();

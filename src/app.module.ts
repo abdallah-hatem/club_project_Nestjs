@@ -5,7 +5,6 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { ActivityModule } from './activity/activity.module';
-import { ColorsModule } from './colors/colors.module';
 
 @Module({
   imports: [
@@ -14,7 +13,6 @@ import { ColorsModule } from './colors/colors.module';
     AuthModule,
     PrismaModule,
     ActivityModule,
-    ColorsModule,
   ],
 })
 export class AppModule {}

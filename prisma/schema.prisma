@@ -10,98 +10,22 @@ datasource db {
   // directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
-model User {
-  id       Int    @id @default(autoincrement())
-  name     String
-  email    String @unique
-  password String
-  cart     Cart[] @relation(name: "CartToUser")
-}
-
-model Product {
-  id    Int    @id @default(autoincrement())
-  name  String
-  price Int
-  desc  String
-
-  Category   Category @relation(name: "CategoryToProduct", fields: [categoryId], references: [id])
-  categoryId Int
-
-  CartItem     CartItem[]     @relation(name: "CartItemToProduct")
-  SizeToColors SizeToColors[] @relation(name: "ProductToSizeToColors")
-}
-
-model Category {
-  id   Int    @id @default(autoincrement())
-  name String
-
-  products Product[] @relation(name: "CategoryToProduct")
-}
-
-model CartItem {
-  id       Int @id @default(autoincrement())
-  quantity Int
-
-  size    Sizes @relation(name: "CartItemToSizes", fields: [sizesId], references: [id], onDelete: Cascade)
-  sizesId Int
-
-  color    Colors @relation(name: "CartItemToColors", fields: [colorsId], references: [id], onDelete: Cascade)
-  colorsId Int
-
-  product   Product @relation(name: "CartItemToProduct", fields: [productId], references: [id], onDelete: Cascade)
-  productId Int
-
-  Cart   Cart @relation(name: "CartToCartItem", fields: [cartId], references: [id], onDelete: Cascade)
-  cartId Int
-}
-
-model Cart {
-  id Int @id @default(autoincrement())
-
-  User   User @relation(name: "CartToUser", fields: [userId], references: [id], onDelete: Cascade)
-  userId Int
-
-  cartItem CartItem[] @relation(name: "CartToCartItem")
-}
-
-model Colors {
-  id   Int    @id @default(autoincrement())
-  name String
-  hex  String
-
-  SizeToColors SizeToColors[] @relation(name: "ColorsToSizeToColors")
-  CartItem     CartItem[]     @relation(name: "CartItemToColors")
-}
-
-model Sizes {
-  id   Int    @id @default(autoincrement())
-  name String
-
-  SizeToColors SizeToColors[] @relation(name: "SizeToColorsToSizes")
-  CartItem     CartItem[]     @relation(name: "CartItemToSizes")
-}
-
-model SizeToColors {
-  id       Int @id @default(autoincrement())
-  quantity Int
-
-  porduct   Product @relation(name: "ProductToSizeToColors", fields: [productId], references: [id], onDelete: Cascade)
-  productId Int
-
-  size   Sizes @relation(name: "SizeToColorsToSizes", fields: [sizeId], references: [id], onDelete: Cascade)
-  sizeId Int
-
-  colors Colors[] @relation(name: "ColorsToSizeToColors")
-}
-
-///////////////////////
-
 enum Role {
   USER
   ADMIN
 }
 
-model User_club {
+enum Day {
+  SUN
+  MON
+  TUE
+  WED
+  THU
+  FRI
+  SAT
+}
+
+model User {
   id       Int    @id @default(autoincrement())
   name     String
   email    String @unique
@@ -122,7 +46,7 @@ model Working_schedule {
   name String
   from DateTime
   to   DateTime
-  date DateTime
+  day  Day
 
   activity_id Int
   activity    Activity @relation(fields: [activity_id], references: [id])
