@@ -1,14 +1,14 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
-  // Body,
-  // Delete,
-  // Param,
-  // Post,
-  // Put,
+  Param,
+  Post,
+  Put,
 } from '@nestjs/common';
 import { ActivityService } from './activity.service';
-// import { ActivityDto } from './dto';
+import { ActivityDto } from './dto';
 
 @Controller('activity')
 export class ActivityController {
@@ -19,18 +19,18 @@ export class ActivityController {
     return this.activityService.getAllActivities();
   }
 
-  // @Post()
-  // addCategory(@Body() dto: ActivityDto) {
-  //   return this.categoryService.addCategory(dto);
-  // }
+  @Post()
+  addCategory(@Body() dto: ActivityDto) {
+    return this.activityService.addActivity(dto);
+  }
 
-  // @Delete('/:id')
-  // deleteCategoryById(@Param('id') id: string) {
-  //   return this.categoryService.deleteCategoryById(id);
-  // }
+  @Delete('/:id')
+  deleteCategoryById(@Param('id') id: string) {
+    return this.activityService.deleteActivityById(id);
+  }
 
-  // @Put('/:id')
-  // updateCategoryById(@Body() dto: ActivityDto, @Param('id') id: string) {
-  //   return this.categoryService.updateCategoryById(dto, id);
-  // }
+  @Put('/:id')
+  updateCategoryById(@Body() dto: ActivityDto, @Param('id') id: string) {
+    return this.activityService.updateActivityById(dto, id);
+  }
 }

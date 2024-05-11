@@ -1,5 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { ActivityDto } from './dto';
 // import { ActivityDto } from './dto';
 
 @Injectable()
@@ -22,85 +23,85 @@ export class ActivityService {
     }
   }
 
-  // async addCategory(dto: ActivityDto) {
-  //   try {
-  //     const { name } = dto;
+  async addActivity(dto: ActivityDto) {
+    try {
+      const { name } = dto;
 
-  //     const categoryFound = await this.isCategoryInDB(name);
+      const activityFound = await this.isActivityInDB(name);
 
-  //     if (categoryFound)
-  //       throw new HttpException('Category already in database', 409);
+      if (activityFound)
+        throw new HttpException('Activity already in database', 409);
 
-  //     const newCategory = await this.prisma.category.create({
-  //       data: {
-  //         name,
-  //       },
-  //     });
+      const newActivity = await this.prisma.activity.create({
+        data: {
+          name,
+        },
+      });
 
-  //     if (!newCategory) throw new HttpException('Error in database', 500);
+      if (!newActivity) throw new HttpException('Error in database', 500);
 
-  //     return { msg: 'successfully created', newCategory };
-  //   } catch (error) {
-  //     if (error) {
-  //       console.log(error);
+      return { msg: 'successfully created', newActivity };
+    } catch (error) {
+      if (error) {
+        console.log(error);
 
-  //       const { message, status } = error;
-  //       throw new HttpException(message, status);
-  //     }
-  //     return error;
-  //   }
-  // }
+        const { message, status } = error;
+        throw new HttpException(message, status);
+      }
+      return error;
+    }
+  }
 
-  // async deleteCategoryById(categoryId: string) {
-  //   try {
-  //     const id = Number(categoryId);
-  //     const deletedCategory = await this.prisma.category.delete({
-  //       where: { id },
-  //     });
+  async deleteActivityById(activityId: string) {
+    try {
+      const id = Number(activityId);
+      const deletedActivity = await this.prisma.activity.delete({
+        where: { id },
+      });
 
-  //     if (!deletedCategory) throw new HttpException('Error in database', 500);
+      if (!deletedActivity) throw new HttpException('Error in database', 500);
 
-  //     return { msg: 'Category deleted successfully' };
-  //   } catch (error) {
-  //     if (error) {
-  //       const { message, statusCode } = error;
-  //       throw new HttpException(message, statusCode);
-  //     }
-  //     return error;
-  //   }
-  // }
+      return { msg: 'Activity deleted successfully' };
+    } catch (error) {
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
+    }
+  }
 
-  // async updateCategoryById(dto: ActivityDto, categoryId: string) {
-  //   try {
-  //     const { name } = dto;
-  //     const id = Number(categoryId);
+  async updateActivityById(dto: ActivityDto, activityId: string) {
+    try {
+      const { name } = dto;
+      const id = Number(activityId);
 
-  //     const updatedCategory = await this.prisma.category.update({
-  //       where: { id },
-  //       data: { name },
-  //     });
+      const updatedActivity = await this.prisma.activity.update({
+        where: { id },
+        data: { name },
+      });
 
-  //     if (!updatedCategory) throw new HttpException('Error in database', 500);
+      if (!updatedActivity) throw new HttpException('Error in database', 500);
 
-  //     return { msg: 'Category updated successfully', updatedCategory };
-  //   } catch (error) {
-  //     if (error) {
-  //       const { message, statusCode } = error;
-  //       throw new HttpException(message, statusCode);
-  //     }
-  //     return error;
-  //   }
-  // }
+      return { msg: 'Activity updated successfully', updatedActivity };
+    } catch (error) {
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
+    }
+  }
 
-  // async isCategoryInDB(name: string) {
-  //   try {
-  //     const category = await this.prisma.category.findMany({
-  //       where: {
-  //         name,
-  //       },
-  //     });
+  async isActivityInDB(name: string) {
+    try {
+      const activity = await this.prisma.activity.findMany({
+        where: {
+          name,
+        },
+      });
 
-  //     return category.length > 0;
-  //   } catch (error) {}
-  // }
+      return activity.length > 0;
+    } catch (error) {}
+  }
 }
