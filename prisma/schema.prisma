@@ -93,3 +93,47 @@ model SizeToColors {
 
   colors Colors[] @relation(name: "ColorsToSizeToColors")
 }
+
+///////////////////////
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User_club {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+  role     Role   @default(USER)
+}
+
+model Activity {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  reservations Activity_reservation[]
+  schedule     Working_schedule[]
+}
+
+model Working_schedule {
+  id   Int      @id @default(autoincrement())
+  name String
+  from DateTime
+  to   DateTime
+  date DateTime
+
+  activity_id Int
+  activity    Activity @relation(fields: [activity_id], references: [id])
+}
+
+model Activity_reservation {
+  id   Int      @id @default(autoincrement())
+  from DateTime
+  to   DateTime
+  date DateTime
+
+  activity_id Int
+  activity    Activity @relation(fields: [activity_id], references: [id])
+}
