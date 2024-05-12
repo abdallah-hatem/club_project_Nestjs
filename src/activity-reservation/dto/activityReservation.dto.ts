@@ -12,8 +12,17 @@ export class ActivityReservationDto {
   @IsDateString()
   @IsNotEmpty()
   date: Date;
+  
+  @IsNumber()
+  @IsNotEmpty()
+  user_id: number;
 
   @IsNumber()
   @IsNotEmpty()
   activity_id: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  field_id: number;
+
 }

@@ -31,6 +31,8 @@ model User {
   email    String @unique
   password String
   role     Role   @default(USER)
+
+  reservations Activity_reservation[]
 }
 
 model Activity {
@@ -39,6 +41,17 @@ model Activity {
 
   reservations Activity_reservation[]
   schedule     Working_schedule[]
+  fields       Field[]
+}
+
+model Field {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  activity_id Int
+  activity    Activity @relation(fields: [activity_id], references: [id])
+
+  reservations Activity_reservation[]
 }
 
 model Working_schedule {
@@ -58,6 +71,12 @@ model Activity_reservation {
   to   DateTime
   date DateTime
 
+  user_id Int
+  user    User @relation(fields: [user_id], references: [id])
+
   activity_id Int
   activity    Activity @relation(fields: [activity_id], references: [id])
+
+  field_id Int
+  fields   Field @relation(fields: [field_id], references: [id])
 }

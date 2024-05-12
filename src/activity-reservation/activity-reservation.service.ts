@@ -26,12 +26,29 @@ export class ActivityReservationService {
 
   async addActivityReservation(dto: ActivityReservationDto) {
     try {
-      const { activity_id, from, date, to } = dto;
+      const { activity_id, from, date, to, field_id, user_id } = dto;
+
+      const reservations = await this.prisma.activity_reservation.findMany();
+
+      const timeAlreadyFound = this.isTimeRangeAvailable(
+        reservations.map((el) => {
+          return {
+            from: el.from,
+            to: el.to,
+          };
+        }),
+        from,
+        to,
+      );
+
+      if (timeAlreadyFound)
+        throw new HttpException('ActivityResrvation already in database', 409);
 
       const activityReservationFound = await this.isActivityReservationInDB(
         from,
         to,
         date,
+        field_id,
       );
 
       if (activityReservationFound)
@@ -44,6 +61,8 @@ export class ActivityReservationService {
             from,
             date,
             to,
+            field_id,
+            user_id,
           },
         });
 
@@ -64,7 +83,12 @@ export class ActivityReservationService {
 
   // helpers
 
-  async isActivityReservationInDB(from: Date, to: Date, date: Date) {
+  async isActivityReservationInDB(
+    from: Date,
+    to: Date,
+    date: Date,
+    field_id?: number,
+  ) {
     try {
       const activityResrvation =
         await this.prisma.activity_reservation.findMany({
@@ -72,10 +96,30 @@ export class ActivityReservationService {
             date,
             from,
             to,
+            field_id,
           },
         });
 
       return activityResrvation.length > 0;
     } catch (error) {}
+  }
+
+  isTimeRangeAvailable(reservedSlots: any[], fromTime: Date, toTime: Date) {
+    const from = new Date(fromTime).getTime();
+    const to = new Date(toTime).getTime();
+
+    // Check if the provided time range overlaps with any reserved slots
+    for (const slot of reservedSlots) {
+      const slotFrom = new Date(slot.from).getTime();
+      const slotTo = new Date(slot.to).getTime();
+
+      if (!(to <= slotFrom || from >= slotTo)) {
+        // Time range overlaps with this reserved slot
+        return false; // Not available
+      }
+    }
+
+    // Time range does not overlap with any reserved slots
+    return true; // Available
   }
 }
