@@ -8,9 +8,7 @@ export class UserService {
 
   async getAllUsers() {
     try {
-      const users = await this.prisma.user.findMany({
-        include: { cart: true },
-      });
+      const users = await this.prisma.user.findMany({});
 
       if (!users) throw new HttpException('Error in database', 500);
 

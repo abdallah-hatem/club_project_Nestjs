@@ -30,7 +30,6 @@ export class AuthService {
           name,
           email,
           password: hash,
-          cart: { create: [{}] },
         },
       });
 
