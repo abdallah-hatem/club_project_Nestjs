@@ -13,7 +13,7 @@ export class ActivityService {
 
       if (!activities) throw new HttpException('Error in database', 500);
 
-      return { activities };
+      return { result: activities };
     } catch (error) {
       if (error) {
         const { message, statusCode } = error;

@@ -12,7 +12,7 @@ export class UserService {
 
       if (!users) throw new HttpException('Error in database', 500);
 
-      return { users };
+      return { result: users };
     } catch (error) {
       if (error) {
         const { message, statusCode } = error;

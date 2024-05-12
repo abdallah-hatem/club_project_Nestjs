@@ -12,7 +12,7 @@ export class FieldService {
 
       if (!fields) throw new HttpException('Error in database', 500);
 
-      return { fields };
+      return { result: fields };
     } catch (error) {
       if (error) {
         const { message, statusCode } = error;

@@ -14,7 +14,7 @@ export class ActivityReservationService {
       if (!activitityReservations)
         throw new HttpException('Error in database', 500);
 
-      return { activitityReservations };
+      return { result: activitityReservations };
     } catch (error) {
       if (error) {
         const { message, statusCode } = error;
