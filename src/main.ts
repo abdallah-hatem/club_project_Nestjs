@@ -11,7 +11,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000',
       'http://localhost:4200',
-      'http://localhost:8889/',
+      'http://localhost:8889',
       'https://admin-panel-next-js-delta.vercel.app',
       'https://angular-admin-panel-ecommerce.vercel.app',
     ],
