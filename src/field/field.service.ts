@@ -8,7 +8,11 @@ export class FieldService {
 
   async getAllFields() {
     try {
-      const fields = await this.prisma.field.findMany();
+      const fields = await this.prisma.field.findMany({
+        include: {
+          activity: true,
+        },
+      });
 
       if (!fields) throw new HttpException('Error in database', 500);
 
