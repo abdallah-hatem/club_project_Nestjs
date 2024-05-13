@@ -8,7 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { FieldService } from './field.service';
-import { FieldDto } from './dto';
+import { FieldDto, UpdateFieldDto } from './dto';
 
 @Controller('field')
 export class FieldController {
@@ -35,7 +35,7 @@ export class FieldController {
   }
 
   @Put('/:id')
-  updateFieldById(@Body() dto: FieldDto, @Param('id') id: string) {
+  updateFieldById(@Body() dto: UpdateFieldDto, @Param('id') id: string) {
     return this.fieldService.updateFieldById(dto, id);
   }
 }

@@ -6,6 +6,12 @@ export class FieldDto {
   name: string;
 
   @IsNumber()
-  // @IsNotEmpty()
+  @IsNotEmpty()
   activity_id: number;
+}
+
+export class UpdateFieldDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 }

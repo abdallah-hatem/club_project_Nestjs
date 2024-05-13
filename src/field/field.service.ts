@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { FieldDto } from './dto';
+import { FieldDto, UpdateFieldDto } from './dto';
 
 @Injectable()
 export class FieldService {
@@ -99,7 +99,7 @@ export class FieldService {
     }
   }
 
-  async updateFieldById(dto: FieldDto, fieldId: string) {
+  async updateFieldById(dto: UpdateFieldDto, fieldId: string) {
     try {
       const { name } = dto;
 
