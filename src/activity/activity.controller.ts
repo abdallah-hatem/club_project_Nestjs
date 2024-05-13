@@ -19,6 +19,11 @@ export class ActivityController {
     return this.activityService.getAllActivities();
   }
 
+  @Get('/:id')
+  getActivityById(@Param('id') id: string) {
+    return this.activityService.getActivityById(id);
+  }
+
   @Post()
   addCategory(@Body() dto: ActivityDto) {
     return this.activityService.addActivity(dto);

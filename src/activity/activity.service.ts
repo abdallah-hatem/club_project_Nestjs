@@ -23,6 +23,26 @@ export class ActivityService {
     }
   }
 
+  async getActivityById(activityId: string) {
+    try {
+      const activity = await this.prisma.activity.findUnique({
+        where: {
+          id: Number(activityId),
+        },
+      });
+
+      if (!activity) throw new HttpException('Error in database', 500);
+
+      return { result: activity };
+    } catch (error) {
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
+    }
+  }
+
   async addActivity(dto: ActivityDto) {
     try {
       const { name } = dto;
