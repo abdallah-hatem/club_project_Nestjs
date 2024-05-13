@@ -22,4 +22,8 @@ export class userUpdateDto {
   @IsEmail()
   @IsNotEmpty()
   email: string;
+
+  @IsOptional()
+  @IsString()
+  role: 'USER' | 'ADMIN';
 }
