@@ -26,6 +26,29 @@ export class FieldService {
     }
   }
 
+  async getFieldById(fieldId: string) {
+    try {
+      const field = await this.prisma.field.findUnique({
+        where: {
+          id: Number(fieldId),
+        },
+        include: {
+          activity: true,
+        },
+      });
+
+      if (!field) throw new HttpException('Error in database', 500);
+
+      return { result: field };
+    } catch (error) {
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
+    }
+  }
+
   async addField(dto: FieldDto) {
     try {
       const { activity_id, name } = dto;
