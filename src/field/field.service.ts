@@ -79,6 +79,49 @@ export class FieldService {
     }
   }
 
+  async deleteFieldById(fieldId: string) {
+    try {
+      const field = await this.prisma.field.delete({
+        where: {
+          id: Number(fieldId),
+        },
+      });
+
+      if (!field) throw new HttpException('Error in database', 500);
+
+      return { msg: 'Field deleted successfully' };
+    } catch (error) {
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
+    }
+  }
+
+  async updateFieldById(dto: FieldDto, fieldId: string) {
+    try {
+      const { name } = dto;
+
+      const id = Number(fieldId);
+
+      const updatedField = await this.prisma.field.update({
+        where: { id },
+        data: { name },
+      });
+
+      if (!updatedField) throw new HttpException('Error in database', 500);
+
+      return { msg: 'Field updated successfully', updatedField };
+    } catch (error) {
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
+    }
+  }
+
   // helpers
   async isFieldInDB(name: string, activity_id: number) {
     try {

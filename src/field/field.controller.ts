@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { FieldService } from './field.service';
 import { FieldDto } from './dto';
 
@@ -19,5 +27,15 @@ export class FieldController {
   @Post()
   addField(@Body() dto: FieldDto) {
     return this.fieldService.addField(dto);
+  }
+
+  @Delete('/:id')
+  deleteFieldById(@Param('id') id: string) {
+    return this.fieldService.deleteFieldById(id);
+  }
+
+  @Put('/:id')
+  updateFieldById(@Body() dto: FieldDto, @Param('id') id: string) {
+    return this.fieldService.updateFieldById(dto, id);
   }
 }
