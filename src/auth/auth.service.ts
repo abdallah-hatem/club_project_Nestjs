@@ -30,6 +30,7 @@ export class AuthService {
           name,
           email,
           password: hash,
+          subscribtion_end_date: new Date(),
         },
       });
 

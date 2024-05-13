@@ -81,13 +81,13 @@ export class UserService {
 
   async updateUserById(dto: userUpdateDto, userId: string) {
     try {
-      const { name, email, role } = dto;
+      const { name, email, role, subscribtion_end_date } = dto;
 
       const id = Number(userId);
 
       const updatedUser = await this.prisma.user.update({
         where: { id },
-        data: { name, email, role },
+        data: { name, email, role, subscribtion_end_date },
       });
 
       if (!updatedUser) throw new HttpException('Error in database', 500);
