@@ -24,6 +24,11 @@ export class FieldController {
     return this.fieldService.getFieldById(id);
   }
 
+  @Get('/activity/:id')
+  getFieldsByActivityId(@Param('id') id: string) {
+    return this.fieldService.getFieldsByActivityId(id);
+  }
+
   @Post()
   addField(@Body() dto: FieldDto) {
     return this.fieldService.addField(dto);

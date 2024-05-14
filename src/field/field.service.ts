@@ -49,6 +49,31 @@ export class FieldService {
     }
   }
 
+  async getFieldsByActivityId(activityId: string) {
+    try {
+      const fields = await this.prisma.field.findMany({
+        where: {
+          activity_id: Number(activityId),
+        },
+        include: {
+          activity: true,
+        },
+      });
+
+      if (!fields) throw new HttpException('Error in database', 500);
+
+      console.log(fields, 'fields');
+
+      return { result: fields };
+    } catch (error) {
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
+    }
+  }
+
   async addField(dto: FieldDto) {
     try {
       const { activity_id, name } = dto;

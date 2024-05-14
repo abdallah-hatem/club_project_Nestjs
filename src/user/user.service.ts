@@ -8,7 +8,9 @@ export class UserService {
 
   async getAllUsers() {
     try {
-      const users = await this.prisma.user.findMany({});
+      const users = await this.prisma.user.findMany({
+        // include: { reservations: true },
+      });
 
       if (!users) throw new HttpException('Error in database', 500);
 
@@ -31,7 +33,9 @@ export class UserService {
           id,
         },
         include: {
-          reservations: true,
+          reservations: {
+            include: { activity: true, fields: true },
+          },
         },
       });
 

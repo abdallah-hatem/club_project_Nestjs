@@ -1,18 +1,14 @@
-import { IsDateString, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class ActivityReservationDto {
-  @IsDateString() //  ISO 8601: 2024-05-09T22:00:00.000Z
+  @IsString() //  '10:30 AM , 11:30 AM'
   @IsNotEmpty()
-  from: Date;
-
-  @IsDateString()
-  @IsNotEmpty()
-  to: Date;
+  selectedTimes: string;
 
   @IsDateString()
   @IsNotEmpty()
   date: Date;
-  
+
   @IsNumber()
   @IsNotEmpty()
   user_id: number;
@@ -24,5 +20,18 @@ export class ActivityReservationDto {
   @IsNumber()
   @IsNotEmpty()
   field_id: number;
+}
 
+export class ReservedDataDto {
+  @IsNumber()
+  @IsNotEmpty()
+  activity_id: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  field_id: number;
+
+  @IsDateString()
+  @IsNotEmpty()
+  date: Date;
 }
