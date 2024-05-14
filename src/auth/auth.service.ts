@@ -68,7 +68,7 @@ export class AuthService {
 
       const jwt = await this.signToken(user.user.id, user.user.email);
 
-      return { msg: 'successfully logged in', jwt };
+      return { msg: 'successfully logged in', jwt, user: user.user };
     } catch (error) {
       if (error) {
         const { message, statusCode } = error;

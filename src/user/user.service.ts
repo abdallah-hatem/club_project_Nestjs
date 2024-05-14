@@ -30,6 +30,9 @@ export class UserService {
         where: {
           id,
         },
+        include: {
+          reservations: true,
+        },
       });
 
       if (!user) throw new HttpException('Error in database', 500);
