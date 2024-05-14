@@ -10,6 +10,8 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:8889',
+      'https://silly-pothos-1dc604.netlify.app',
+      'https://unrivaled-biscuit-40aec6.netlify.app',
       'http://localhost:4200',
       'http://localhost:3000',
       'https://admin-panel-next-js-delta.vercel.app',
