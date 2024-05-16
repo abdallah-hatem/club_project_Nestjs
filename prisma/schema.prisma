@@ -26,14 +26,20 @@ enum Day {
 }
 
 model User {
-  id                    Int      @id @default(autoincrement())
-  name                  String
-  email                 String   @unique
+  id            Int    @id @default(autoincrement())
+  name          String
+  email         String @unique
+  membership_id String @unique
+
+  address String
+  id_card String
+
   password              String
   role                  Role     @default(USER)
   subscribtion_end_date DateTime
 
   reservations Activity_reservation[]
+  practices    User_practices[]
 }
 
 model Activity {
@@ -41,7 +47,6 @@ model Activity {
   name String
 
   reservations Activity_reservation[]
-  schedule     Working_schedule[]
   fields       Field[]
 }
 
@@ -53,17 +58,6 @@ model Field {
   activity    Activity @relation(fields: [activity_id], references: [id])
 
   reservations Activity_reservation[]
-}
-
-model Working_schedule {
-  id   Int      @id @default(autoincrement())
-  name String
-  from DateTime
-  to   DateTime
-  day  Day
-
-  activity_id Int
-  activity    Activity @relation(fields: [activity_id], references: [id])
 }
 
 model Activity_reservation {
@@ -79,4 +73,65 @@ model Activity_reservation {
 
   field_id Int
   fields   Field @relation(fields: [field_id], references: [id])
+}
+
+model Event {
+  id          Int    @id @default(autoincrement())
+  imageUrl    String
+  date        String
+  description String
+}
+
+model Contact_us {
+  id           Int    @id @default(autoincrement())
+  phone_number String
+  email        String
+  description  String
+}
+
+model Faqs {
+  id       Int    @id @default(autoincrement())
+  question String
+  answer   String
+}
+
+model Coach {
+  id        Int                 @id @default(autoincrement())
+  name      String
+  practices Practice_schedule[]
+}
+
+model Sport {
+  id        Int                 @id @default(autoincrement())
+  name      String
+  practices Practice_schedule[]
+}
+
+model Practice_schedule {
+  id Int @id @default(autoincrement())
+
+  sport_id Int
+  sports   Sport @relation(fields: [sport_id], references: [id])
+
+  coach_id Int
+  coach    Coach @relation(fields: [coach_id], references: [id])
+
+  from String
+  to   String
+
+  price String
+
+  days String
+
+  practices User_practices[]
+}
+
+model User_practices {
+  user    User @relation(fields: [user_id], references: [id])
+  user_id Int // relation scalar field (used in the `@relation` attribute above)
+
+  practice_schedule Practice_schedule @relation(fields: [practice_id], references: [id])
+  practice_id       Int // relation scalar field (used in the `@relation` attribute above)
+
+  @@id([user_id, practice_id])
 }

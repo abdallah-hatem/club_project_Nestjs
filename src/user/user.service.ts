@@ -8,9 +8,7 @@ export class UserService {
 
   async getAllUsers() {
     try {
-      const users = await this.prisma.user.findMany({
-        // include: { reservations: true },
-      });
+      const users = await this.prisma.user.findMany({});
 
       if (!users) throw new HttpException('Error in database', 500);
 
@@ -105,6 +103,18 @@ export class UserService {
         const { message, statusCode } = error;
         throw new HttpException(message, statusCode);
       }
+      return error;
+    }
+  }
+
+  async getUserByMembershipId(membershipId: string) {
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { membership_id: membershipId },
+      });
+
+      return { user };
+    } catch (error) {
       return error;
     }
   }

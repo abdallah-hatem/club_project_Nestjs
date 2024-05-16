@@ -40,46 +40,7 @@ export class ActivityReservationService {
       if (!field_ids.includes(field_id))
         throw new HttpException('Field not found', 404);
 
-      // get reservations with the same field and same activity
-      const reservationsOnSameField =
-        await this.prisma.activity_reservation.findMany({
-          where: { field_id, activity_id },
-        });
-
-      console.log(reservationsOnSameField, 'reservationsOnSameField');
-
-      // get reservations with the same date
-      const reservationsWithSameDay = reservationsOnSameField.filter(
-        (el) => el.date.getDay() === new Date(date).getDay(),
-      );
-
-      console.log(reservationsWithSameDay, 'reservationsWithSameDay');
-
-      // Check if the provided time range overlaps with any reserved time ranges
-      // const isTimeAvailable = this.isTimeRangeAvailable(
-      //   reservationsWithSameDay.map((el) => {
-      //     return {
-      //       from: el.from,
-      //       to: el.to,
-      //     };
-      //   }),
-      //   from,
-      //   to,
-      // );
-
-      // if (!isTimeAvailable)
-      //   throw new HttpException('ActivityResrvation already in database', 409);
-
-      // const activityReservationFound = await this.isActivityReservationInDB(
-      //   from,
-      //   to,
-      //   date,
-      //   field_id,
-      //   user_id,
-      // );
-
-      // if (activityReservationFound)
-      //   throw new HttpException('ActivityResrvation already in database', 409);
+      // already reserved times handled on frontend
 
       const newActivityReservation =
         await this.prisma.activity_reservation.create({
@@ -116,34 +77,11 @@ export class ActivityReservationService {
         where: { field_id, activity_id, date },
       });
 
-      console.log(bookedTimes, 'bookedTimes');
-
       const selectedTimesArray = bookedTimes.map((el) => {
         return el.selectedTimes.split(',');
       });
 
-      console.log(selectedTimesArray, 'selectedTimesArray');
-
-      // const formatTimes = bookedTimes.map((el) => {
-      //   return {
-      //     from: this.getTimeFormat(el.from),
-      //     to: this.getTimeFormat(el.to),
-      //   };
-      // });
-
-      // console.log(formatTimes, 'formatTimes');
-
-      // const formatBookedTimes = bookedTimes.map((el) => {
-      //   return {
-      //     ...el,
-      //     from_format: this.getTimeFormat(el.from),
-      //     to_format: this.getTimeFormat(el.to),
-      //   };
-      // });
-
-      // if (!bookedTimes) throw new HttpException('Error in database', 500);
-
-      return { result: selectedTimesArray[0] };
+      return { result: selectedTimesArray };
     } catch (error) {}
   }
 

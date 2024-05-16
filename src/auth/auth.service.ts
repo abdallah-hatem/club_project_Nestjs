@@ -21,9 +21,11 @@ export class AuthService {
 
   async signup(dto: AuthDto) {
     try {
-      const { name, email, password } = dto;
+      const { name, email, password, address, id_card } = dto;
 
       const hash = await bcrypt.hash(password, 10);
+
+      const membership_id = this.generateRandomString(20);
 
       const user = await this.prisma.user.create({
         data: {
@@ -31,6 +33,9 @@ export class AuthService {
           email,
           password: hash,
           subscribtion_end_date: new Date(),
+          address,
+          id_card,
+          membership_id,
         },
       });
 
@@ -47,10 +52,13 @@ export class AuthService {
   }
 
   async login(dto: LoginDto) {
-    const { email, password } = dto;
+    const { email, password, membership_id } = dto;
+
     try {
       // check if user already exists
-      const user = await this.userService.getUserByEmail(email);
+      const user = email
+        ? await this.userService.getUserByEmail(email)
+        : await this.userService.getUserByMembershipId(membership_id);
 
       if (!user.user) {
         throw new NotFoundException(
@@ -88,5 +96,17 @@ export class AuthService {
       expiresIn: '30m',
       secret: process.env.JWT_SECRET,
     });
+  } 
+
+  // helpers
+  generateRandomString(length: number) {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
   }
 }
