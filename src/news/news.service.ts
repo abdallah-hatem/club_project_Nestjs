@@ -1,18 +1,18 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { EventDto, UpdateEventDto } from './dto';
+import { NewsDto, UpdateNewsDto } from './dto';
 
 @Injectable()
-export class EventService {
+export class NewsService {
   constructor(private prisma: PrismaService) {}
 
   async getAll() {
     try {
-      const events = await this.prisma.event.findMany();
+      const news = await this.prisma.news.findMany();
 
-      if (!events) throw new HttpException('Error in database', 500);
+      if (!news) throw new HttpException('Error in database', 500);
 
-      return { result: events };
+      return { result: news };
     } catch (error) {
       if (error) {
         const { message, statusCode } = error;
@@ -24,15 +24,15 @@ export class EventService {
 
   async getOne(id: string) {
     try {
-      const event = await this.prisma.event.findUnique({
+      const news = await this.prisma.news.findUnique({
         where: {
           id: Number(id),
         },
       });
 
-      if (!event) throw new HttpException('Error in database', 500);
+      if (!news) throw new HttpException('Error in database', 500);
 
-      return { result: event };
+      return { result: news };
     } catch (error) {
       if (error) {
         const { message, statusCode } = error;
@@ -42,17 +42,17 @@ export class EventService {
     }
   }
 
-  async addEvent(dto: EventDto) {
+  async addNews(dto: NewsDto) {
     try {
       const { date, description, imageUrl, title } = dto;
 
-      const newEvent = await this.prisma.event.create({
+      const newNews = await this.prisma.news.create({
         data: { date, description, imageUrl, title },
       });
 
-      if (!newEvent) throw new HttpException('Error in database', 500);
+      if (!newNews) throw new HttpException('Error in database', 500);
 
-      return { msg: 'successfully created', newEvent };
+      return { msg: 'successfully created', newNews };
     } catch (error) {
       if (error) {
         const { message, statusCode } = error;
@@ -62,17 +62,17 @@ export class EventService {
     }
   }
 
-  async deleteEvent(id: string) {
+  async deleteNews(id: string) {
     try {
-      const event = await this.prisma.event.delete({
+      const news = await this.prisma.news.delete({
         where: {
           id: Number(id),
         },
       });
 
-      if (!event) throw new HttpException('Error in database', 500);
+      if (!news) throw new HttpException('Error in database', 500);
 
-      return { msg: 'Event deleted successfully' };
+      return { msg: 'news deleted successfully' };
     } catch (error) {
       if (error) {
         const { message, statusCode } = error;
@@ -82,20 +82,20 @@ export class EventService {
     }
   }
 
-  async updateEvent(dto: UpdateEventDto, id: string) {
+  async updateNews(dto: UpdateNewsDto, id: string) {
     try {
       const { date, description, imageUrl, title } = dto;
 
-      const event = await this.prisma.event.update({
+      const news = await this.prisma.news.update({
         where: {
           id: Number(id),
         },
         data: { date, description, imageUrl, title },
       });
 
-      if (!event) throw new HttpException('Error in database', 500);
+      if (!news) throw new HttpException('Error in database', 500);
 
-      return { msg: 'successfully updated', event };
+      return { msg: 'successfully updated', news };
     } catch (error) {
       if (error) {
         const { message, statusCode } = error;

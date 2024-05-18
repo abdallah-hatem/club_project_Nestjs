@@ -16,6 +16,7 @@ import { CoachService } from './coach/coach.service';
 import { CoachController } from './coach/coach.controller';
 import { PracticeModule } from './practice/practice.module';
 import { BookPracticeModule } from './book-practice/book-practice.module';
+import { NewsModule } from './news/news.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { BookPracticeModule } from './book-practice/book-practice.module';
     CoachModule,
     PracticeModule,
     BookPracticeModule,
+    NewsModule,
   ],
   controllers: [CoachController],
   providers: [CoachService],

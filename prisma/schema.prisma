@@ -77,8 +77,17 @@ model Activity_reservation {
 
 model Event {
   id          Int    @id @default(autoincrement())
+  title       String
   imageUrl    String
   date        String
+  description String
+}
+
+model News {
+  id          Int    @id @default(autoincrement())
+  title       String
+  date        String
+  imageUrl    String
   description String
 }
 
