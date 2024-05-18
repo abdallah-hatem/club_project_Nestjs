@@ -51,10 +51,10 @@ export class CoachService {
 
   async addCoach(dto: CoachDto) {
     try {
-      const { name } = dto;
+      const { name, age, brief, years_of_experience } = dto;
 
       const newCoach = await this.prisma.coach.create({
-        data: { name },
+        data: { name, age, brief, years_of_experience },
       });
 
       if (!newCoach) throw new HttpException('Error in database', 500);
@@ -71,11 +71,11 @@ export class CoachService {
 
   async updateCoach(id: string, dto: CoachDto) {
     try {
-      const { name } = dto;
+      const { name, age, brief, years_of_experience } = dto;
 
       const updatedCoach = await this.prisma.coach.update({
         where: { id: Number(id) },
-        data: { name },
+        data: { name, age, brief, years_of_experience },
       });
 
       if (!updatedCoach) throw new HttpException('Error in database', 500);

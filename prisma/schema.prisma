@@ -96,9 +96,12 @@ model Faqs {
 }
 
 model Coach {
-  id        Int                 @id @default(autoincrement())
-  name      String
-  practices Practice_schedule[]
+  id                  Int                 @id @default(autoincrement())
+  name                String
+  age                 Int
+  years_of_experience Int
+  brief               String
+  practices           Practice_schedule[]
 }
 
 model Sport {
