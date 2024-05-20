@@ -25,7 +25,7 @@ export class AuthService {
 
       const hash = await bcrypt.hash(password, 10);
 
-      const membership_id = this.generateRandomString(20);
+      const membership_id = this.generateRandomString(11);
 
       const user = await this.prisma.user.create({
         data: {
@@ -96,12 +96,11 @@ export class AuthService {
       expiresIn: '30m',
       secret: process.env.JWT_SECRET,
     });
-  } 
+  }
 
   // helpers
   generateRandomString(length: number) {
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const characters = '0123456789';
     let result = '';
     const charactersLength = characters.length;
     for (let i = 0; i < length; i++) {
