@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsDateString,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class PracticeDto {
   @IsNumber()
@@ -22,6 +28,10 @@ export class PracticeDto {
   @IsNotEmpty()
   @IsString()
   days: string;
+
+  @IsDateString()
+  @IsNotEmpty()
+  deadline: Date;
 }
 
 export class UpdatePracticeDto {

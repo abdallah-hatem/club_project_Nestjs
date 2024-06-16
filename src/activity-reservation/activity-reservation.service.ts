@@ -85,6 +85,25 @@ export class ActivityReservationService {
     } catch (error) {}
   }
 
+  async deleteReservation(id: string) {
+    try {
+      const deletedReservation = await this.prisma.activity_reservation.delete({
+        where: {
+          id: Number(id),
+        },
+      });
+      if (!deletedReservation)
+        throw new HttpException('Error in database', 500);
+      return { msg: 'Reservation deleted successfully' };
+    } catch (error) {
+      if (error) {
+        const { message, statusCode } = error;
+        throw new HttpException(message, statusCode);
+      }
+      return error;
+    }
+  }
+
   // helpers
   async isActivityReservationInDB(
     from: Date,

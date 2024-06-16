@@ -89,7 +89,7 @@ export class PracticeService {
 
   async addPractice(dto: PracticeDto) {
     try {
-      const { coach_id, from, to, price, days, sport_id } = dto;
+      const { coach_id, from, to, price, days, sport_id, deadline } = dto;
 
       //   check if user already has a practice
 
@@ -101,6 +101,7 @@ export class PracticeService {
           price: String(price),
           days,
           sport_id,
+          deadline,
         },
       });
 
@@ -114,6 +115,7 @@ export class PracticeService {
           price: String(price),
           days,
           sport_id,
+          deadline,
         },
       });
 

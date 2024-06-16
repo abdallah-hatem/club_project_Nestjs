@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ActivityReservationService } from './activity-reservation.service';
 import { ActivityReservationDto, ReservedDataDto } from './dto';
 
@@ -19,5 +19,10 @@ export class ActivityReservationController {
   @Post()
   addReservation(@Body() dto: ActivityReservationDto) {
     return this.activityReservationService.addActivityReservation(dto);
+  }
+
+  @Delete(':id')
+  deleteReservation(@Param('id') id: string) {
+    return this.activityReservationService.deleteReservation(id);
   }
 }
