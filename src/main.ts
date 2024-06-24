@@ -8,15 +8,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
   app.enableCors({
-    origin: [
-      'http://localhost:8889',
-      'https://silly-pothos-1dc604.netlify.app',
-      'https://unrivaled-biscuit-40aec6.netlify.app',
-      'http://localhost:4200',
-      'http://localhost:3000',
-      'https://admin-panel-next-js-delta.vercel.app',
-      'https://angular-admin-panel-ecommerce.vercel.app',
-    ],
+    origin: '*',
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
   });
 
